@@ -1,20 +1,14 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
-  /* config options here */
   experimental: {
-    agentFeedback: true,
+    // تعطيل الميزة التجريبية التي تتعارض مع `export const dynamic`
+    cacheComponents: false,
   },
-  cacheComponents: true,
-  partialPrefetching: true,
+  // لإسكات التحذير الخاص بـ package-lock.json في المجلد الأعلى
   turbopack: {
-    rules: {
-      "*.css": {
-        loaders: ["@tailwindcss/turbopack"],
-        as: "*.css",
-      },
-    },
+    root: process.cwd(),
   },
-};
+}
 
-export default nextConfig;
+export default nextConfig

@@ -1,26 +1,190 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  --color-ink: #2a1a10;
+  --color-ink-mid: #3a2818;
+  --color-ink-soft: #4a3420;
+  --color-gold: #d4b478;
+  --color-gold-bright: #e8c979;
+  --color-gold-dim: #a88c50;
+  --color-cream: #f5edd8;
+  --color-cream-dim: #d4c9ab;
+  --color-warm: #e8dcc4;
+  --color-accent: #a8452f;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-display: var(--font-jomhuria);
+  --font-body: var(--font-scheherazade);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  body {
+    font-family: var(--font-body), serif;
+    -webkit-font-smoothing: antialiased;
+    color: #e8dcc4;
   }
+  h1, h2, h3, h4 { font-family: var(--font-display), serif; }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer components {
+  .arabic-bg {
+    background-color: #3a2818;
+    background-image:
+      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='400'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.85 0 0 0 0 0.65 0 0 0 0 0.35 0 0 0 0.10 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>"),
+      radial-gradient(ellipse at 20% 0%, rgba(232,201,121,0.14), transparent 55%),
+      radial-gradient(ellipse at 85% 100%, rgba(200,140,70,0.14), transparent 55%),
+      radial-gradient(ellipse at 50% 40%, rgba(74,52,32,0.35), transparent 70%),
+      linear-gradient(180deg, #5a4028 0%, #42301c 45%, #2a1c10 100%);
+    background-attachment: fixed;
+    background-size: 400px 400px, auto, auto, auto, auto;
+  }
+
+  .nav-list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    list-style: none;
+    max-width: 64rem;
+    margin: 0 auto;
+  }
+
+  .nav-btn {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.55rem 1.15rem;
+    border-radius: 4px;
+    border: 1px solid rgba(212,180,120,0.45);
+    background: rgba(58,40,24,0.85);
+    color: #f0d394;
+    font-family: var(--font-body), serif;
+    font-size: 0.95rem;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+  }
+  .nav-btn:hover,
+  .nav-btn:focus,
+  .nav-btn:visited {
+    background: rgba(212,180,120,0.25);
+    border-color: #e8c979;
+    color: #f5e4b8;
+    text-decoration: none;
+  }
+
+  .name-headline {
+    font-family: var(--font-display), serif;
+    font-size: clamp(4rem, 13vw, 9rem);
+    line-height: 1;
+    color: #e8c979;
+    text-shadow:
+      0 1px 0 rgba(140,95,45,0.75),
+      0 4px 24px rgba(232,201,121,0.20);
+    margin: 0;
+    display: block;
+    text-align: center;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    user-select: none;
+  }
+
+  .ornament-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    color: #d4b478;
+  }
+  .ornament-divider::before,
+  .ornament-divider::after {
+    content: '';
+    flex: 1;
+    max-width: 120px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(212,180,120,0.7), transparent);
+  }
+
+  .card-cream {
+    background-color: #f5edd8;
+    background-image:
+      radial-gradient(ellipse at 20% 10%, rgba(255,250,240,0.85), transparent 55%),
+      radial-gradient(ellipse at 100% 100%, rgba(160,120,60,0.10), transparent 50%);
+    border: 1px solid rgba(180,140,80,0.45);
+    border-radius: 6px;
+    box-shadow:
+      0 1px 2px rgba(0,0,0,0.35),
+      0 12px 32px rgba(0,0,0,0.4);
+    color: #2a1a10;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  }
+  .card-cream:hover {
+    border-color: rgba(212,180,120,0.85);
+    transform: translateY(-3px);
+    box-shadow:
+      0 2px 4px rgba(0,0,0,0.4),
+      0 18px 40px rgba(0,0,0,0.5);
+  }
+
+  .prose-ar {
+    font-size: 1.3rem;
+    line-height: 2.05;
+    color: #2a1a10;
+  }
+  .prose-ar h1, .prose-ar h2, .prose-ar h3 {
+    font-family: var(--font-display), serif;
+    color: #1a1208;
+    margin-top: 1.5em;
+    margin-bottom: 0.5em;
+    line-height: 1.15;
+  }
+  .prose-ar h1 { font-size: 3rem; }
+  .prose-ar h2 { font-size: 2.25rem; }
+  .prose-ar h3 { font-size: 1.75rem; }
+  .prose-ar p { margin: 1em 0; }
+  .prose-ar blockquote {
+    border-right: 3px solid #d4b478;
+    padding: 0.5em 1.25em;
+    margin: 1.25em 0;
+    color: #4a3a24;
+    font-style: italic;
+    background: rgba(212,180,120,0.1);
+  }
+  .prose-ar ul, .prose-ar ol { padding-right: 1.75em; margin: 1em 0; }
+  .prose-ar a { color: #a8452f; text-decoration: underline; }
+  .prose-ar strong { color: #1a1208; font-weight: 700; }
+
+  .tiptap-shell .ProseMirror {
+    min-height: 320px;
+    padding: 1.5rem;
+    outline: none;
+    color: #2a1a10;
+    font-family: var(--font-body), serif;
+    font-size: 1.2rem;
+    line-height: 2;
+    background: #f5edd8;
+    border-radius: 0 0 6px 6px;
+  }
+  .tiptap-shell .ProseMirror:focus { outline: none; }
+  .tiptap-shell .ProseMirror p.is-editor-empty:first-child::before {
+    content: attr(data-placeholder);
+    color: #a88c50;
+    float: right;
+    height: 0;
+    pointer-events: none;
+  }
+  .tiptap-shell .ProseMirror h1 { font-size: 2.5rem; font-family: var(--font-display); margin: 1em 0 0.3em; }
+  .tiptap-shell .ProseMirror h2 { font-size: 2rem; font-family: var(--font-display); margin: 1em 0 0.3em; }
+  .tiptap-shell .ProseMirror h3 { font-size: 1.5rem; font-family: var(--font-display); margin: 1em 0 0.3em; }
+  .tiptap-shell .ProseMirror blockquote {
+    border-right: 3px solid #d4b478;
+    padding-right: 1em;
+    margin: 1em 0;
+    color: #4a3a24;
+    font-style: italic;
+  }
+  .tiptap-shell .ProseMirror ul, .tiptap-shell .ProseMirror ol { padding-right: 1.75em; margin: 1em 0; }
 }
