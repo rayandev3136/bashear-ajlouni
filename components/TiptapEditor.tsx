@@ -2,7 +2,9 @@
 
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
-import { useEffect } from 'react'
+import Image from '@tiptap/extension-image'
+import { useEffect, useRef } from 'react'
+import { uploadFile } from '@/lib/storage'
 
 interface Props {
   content: string
@@ -11,15 +13,14 @@ interface Props {
 }
 
 export default function TiptapEditor({ content, onChange, placeholder = 'اكتب هنا...' }: Props) {
+  const fileInputRef = useRef<HTMLInputElement>(null)
+
   const editor = useEditor({
-    extensions: [StarterKit],
+    extensions: [StarterKit, Image.configure({ inline: false, allowBase64: false })],
     content,
     immediatelyRender: false,
     editorProps: {
-      attributes: {
-        dir: 'rtl',
-        'data-placeholder': placeholder,
-      },
+      attributes: { dir: 'rtl', 'data-placeholder': placeholder },
     },
     onUpdate: ({ editor }) => onChange(editor.getHTML()),
   })
@@ -31,18 +32,29 @@ export default function TiptapEditor({ content, onChange, placeholder = 'اكت�
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  async function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    if (!file || !editor) return
+    const { url, error } = await uploadFile('work-images', file)
+    if (error) { alert(`فشل رفع الصورة: ${error}`); return }
+    if (url) editor.chain().focus().setImage({ src: url }).run()
+    e.target.value = ''
+  }
+
   if (!editor) {
-    return <div className="rounded border border-ink/25 bg-cream p-4 text-ink/60">جارٍ تحميل المحرر...</div>
+    return <div className="rounded border-2 border-[#a88c50] bg-[#fffefa] p-4 text-[#0a0600]">جارٍ تحميل المحرر...</div>
   }
 
   const btn = (active: boolean) =>
-    `rounded px-3 py-1.5 text-sm transition ${
-      active ? 'bg-ink text-cream' : 'bg-ink/10 text-ink hover:bg-ink/25'
+    `rounded px-3 py-1.5 text-sm font-semibold transition ${
+      active
+        ? 'bg-[#2a1a10] text-[#f5edd8] shadow-sm'
+        : 'bg-[#d4c9ab] text-[#0a0600] hover:bg-[#c4b899]'
     }`
 
   return (
-    <div className="tiptap-shell overflow-hidden rounded border border-ink/30">
-      <div className="flex flex-wrap gap-1 border-b border-ink/20 bg-ink/5 p-2">
+    <div className="tiptap-shell">
+      <div className="flex flex-wrap gap-1 border-b-2 border-[#a88c50]/40 bg-[#e8dcc4] p-2">
         <button type="button" onClick={() => editor.chain().focus().toggleBold().run()} className={btn(editor.isActive('bold'))}>
           <strong>غامق</strong>
         </button>
@@ -67,6 +79,9 @@ export default function TiptapEditor({ content, onChange, placeholder = 'اكت�
         <button type="button" onClick={() => editor.chain().focus().toggleBlockquote().run()} className={btn(editor.isActive('blockquote'))}>
           اقتباس
         </button>
+        <button type="button" onClick={() => fileInputRef.current?.click()} className={btn(false)}>
+          🖼️ صورة
+        </button>
         <button type="button" onClick={() => editor.chain().focus().undo().run()} className={btn(false)}>
           تراجع
         </button>
@@ -74,6 +89,7 @@ export default function TiptapEditor({ content, onChange, placeholder = 'اكت�
           إعادة
         </button>
       </div>
+      <input ref={fileInputRef} type="file" accept="image/*" hidden onChange={handleImageUpload} />
       <EditorContent editor={editor} />
     </div>
   )
